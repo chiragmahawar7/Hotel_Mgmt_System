@@ -1,0 +1,271 @@
+create table Employee(
+Eid number(10) constraint pk_E PRIMARY KEY,
+Ename varchar2(30) constraint nn_E NOT NULL,
+Job varchar2(30) constraint check_E CHECK(Job IN('Manager','Laundrymen','Food Service','Janitor','Cook','Receptionist','Security')),
+DOB date,
+Salary number(10) CHECK(Salary>0),
+Mgr number(10)
+);
+
+create table Room_Type(
+Type_id number(10) constraint pk_Rt PRIMARY KEY,
+Type_name varchar2(30) constraint nn_Rt NOT NULL,
+Total_rooms number(10),
+Max_Guests_Allowed number(10),
+Price number(10)
+);
+
+create table Room(
+Room_no number(10) constraint pk_R PRIMARY KEY,
+Floor number(10),
+Gid varchar2(10)  references Guest(Gid),
+Type_id number(10) references Room_Type(Type_id)
+);
+
+create table Payment(
+Payment_id varchar2(10) constraint pk_P PRIMARY KEY,
+Payment_mode varchar2(30) constraint check_P CHECK(Payment_mode IN('Credit Card','Debit Card','Cash','Online Banking')),
+Amount number(10),
+Booking_id varchar2(10) references R1(Booking_id),
+Gid varchar2(10) references Guest(Gid)
+);
+
+create table Room_Service(
+Service_id number(10) constraint pk_Rs PRIMARY KEY,
+Service_offered varchar2(20) constraint check_Rs CHECK(Service_offered IN('Laundry','Food Delivery','Room Service')),
+Charges number(10),
+Eid number(10) references Employee(Eid),
+Room_no number(10) references Room(Room_no)
+);
+
+
+insert into Employee values(120,'Sahil','Manager','15-OCT-1972',80000,NULL);
+insert into Employee values(119,'Ayush','Manager','09-NOV-1975',60000,120);
+insert into Employee values(118,'Atul','Manager','26-MAR-1977',60000,120);
+insert into Employee values(117,'Satpal','Security','12-OCT-1965',5000,118);
+insert into Employee values(116,'Ramlal','Security','17-APR-1968',5000,118);
+insert into Employee values(115,'Rahul Raj','Security','22-OCT-1982',5000,118);
+insert into Employee values(114,'Ajay','Receptionist','22-FEB-1984',9000,120);
+insert into Employee values(113,'Shweta','Receptionist','20-JAN-1985',90000,120);
+insert into Employee values(112,'Vijay','Cook','13-MAY-1980',15000,119);
+insert into Employee values(111,'Subhash','Cook','19-JUL-1984',15000,119);
+insert into Employee values(110,'Sunny','Cook','25-OCT-1979',15000,119);
+insert into Employee values(109,'Jaskirat','Janitor','21-MAR-1980',5000,118);
+insert into Employee values(108,'Varun','Janitor','17-APR-1983',5000,118);
+insert into Employee values(107,'Aasha','Janitor','20-MAY-1978',5000,118);
+insert into Employee values(106,'Shankar','Food Service','30-JUL-1985',6000,119);
+insert into Employee values(105,'Shekhar','Food Service','27-DEC-1984',6000,119);
+insert into Employee values(104,'Shailendra','Food Service','15-AUG-1986',6000,119);
+insert into Employee values(103,'Sanjiv','Laundrymen','04-FEB-1985',4000,118);
+insert into Employee values(102,'Sagar','Laundrymen','10-JAN-1983',4000,118);
+insert into Employee values(101,'Aman','Laundrymen','12-AUG-1968',4000,118);
+
+insert into Emp_phone values(120,9990987896);
+insert into Emp_phone values(120,9990987897);
+insert into Emp_phone values(119,7289456781);
+insert into Emp_phone values(119,9876212231);
+insert into Emp_phone values(118,7894521654);
+insert into Emp_phone values(117,8289756484);
+insert into Emp_phone values(116,9878786566);
+insert into Emp_phone values(115,8745147963);
+insert into Emp_phone values(114,9911034598);
+insert into Emp_phone values(113,8789491291);
+insert into Emp_phone values(112,9637456213);
+insert into Emp_phone values(111,7412583691);
+insert into Emp_phone values(110,9856471257);
+insert into Emp_phone values(109,8976453121);
+insert into Emp_phone values(108,8456123964);
+insert into Emp_phone values(107,9856471236);
+insert into Emp_phone values(106,9876310795);
+insert into Emp_phone values(105,8978645231);
+insert into Emp_phone values(104,9326978412);
+insert into Emp_phone values(103,9990114323);
+insert into Emp_phone values(102,9990959511);
+insert into Emp_phone values(101,7815236498);
+
+	DECLARE
+	id number(10);
+	name varchar2(30);
+	job varchar2(30);
+	dob date;
+	salary number(10);
+	mgr number(10);
+	BEGIN
+	insert into Employee values(&id,'&name','&job','&dob',&salary,&mgr);
+	COMMIT;
+	END;
+
+DECLARE
+gid number(10);
+f_name varchar2(15);
+m_name varchar2(15);
+l_name varchar2(15);
+address1 varchar2(30);
+address2 varchar2(30);
+address3 varchar2(30);
+BEGIN
+insert into Guest values(&gid,'&f_name','&m_name','l_name','&address1','&address2','&address3');
+END;
+
+DECLARE
+eid number(10);
+phone number(15);
+BEGIN
+insert into Emp_phone values(&eid,&phone);
+END;
+
+DECLARE
+gid number(10);
+phone number(15);
+BEGIN
+insert into Guest_phone values(&gid,&phone);
+END;
+
+DECLARE
+id number(10);
+service varchar2(20);
+charges number(10);
+eid number(10);
+room_no number(10);
+BEGIN
+insert into Room_Service values(&id,'&service',&charges,&eid,&room_no);
+END;
+
+DECLARE
+id varchar2(10);
+mode varchar2(30);
+amount number(10);
+bid varchar2(10);
+gid number(10);
+BEGIN
+insert into Payment values(&id,'&mode',&amount,&bid,&gid);
+END;
+
+DECLARE
+room_no number(10);
+floor number(30);
+gid number(10);
+typeid number(10);
+BEGIN
+insert into Room values(&room_no,&floor,&gid,&typeid);
+END;
+
+DECLARE
+typeid number(10);
+typename varchar2(30);
+total_rooms number(10);
+max_guests number(10);
+price number(10);
+BEGIN
+insert into Room_Type values(&typeid,'&typename',&total_rooms,&max_guests,&price);
+END;
+
+DECLARE
+id varchar2(10);
+checkin timestamp;
+checkout timestamp;
+typeid number(10);
+gid number(10);
+BEGIN
+insert into R1 values(&id,'&checkin','&checkout',&typeid,&gid);
+END;
+
+DECLARE
+id varchar2(10);
+no_of_guests number(10);
+BEGIN
+insert into R2 values(&id,&no_of_guests);
+END;
+
+
+--Stored Function & cursor
+CREATE OR REPLACE FUNCTION Find_Grade RETURN NUMBER IS 
+Grade varchar2(10);
+CURSOR c_emp IS select * from Employee;
+invalid_salary EXCEPTION;
+BEGIN
+FOR item in c_emp
+LOOP
+IF item.Salary<0 THEN
+RAISE invalid_salary;
+ELSIF item.Salary>70000 THEN
+Grade:='A';
+ELSIF item.Salary BETWEEN 50000 AND 70000 THEN
+Grade:='B';
+ELSIF item.Salary BETWEEN 20000 AND 50000 THEN
+Grade:='C';
+ELSIF item.Salary BETWEEN 10000 AND 20000 THEN
+Grade:='D';
+ELSE
+Grade:='E';
+END IF;
+DBMS_OUTPUT.PUT_LINE('Grade of '||item.Eid||' , '||item.Ename||' is - '||grade);
+END LOOP;
+EXCEPTION
+WHEN invalid_salary THEN
+DBMS_OUTPUT.PUT_LINE('Salary of Employee is invalid. Please see the Employees Database.');
+RETURN 0;
+END;
+
+--PL/SQL code to call Find_Grade function
+set serveroutput on;
+set verify off;
+DECLARE
+n NUMBER;
+BEGIN
+n:=Find_Grade;
+END;
+
+
+--stored procedure & cursor
+CREATE OR REPLACE PROCEDURE Find_Bill
+(gid1 IN varchar2,amt OUT number) IS
+price number(10);
+charges1 number(10);
+CURSOR c_charges IS select sum(Charges) from Room_Service,Room where Room.Room_no=Room_Service.Room_no AND Room.Gid=gid1;
+CURSOR c_amt IS select Amount from Payment where Payment.Gid=gid1;
+BEGIN
+open c_charges;
+open c_amt;
+fetch c_charges into charges1;
+fetch c_amt into price;
+close c_amt;
+close c_charges;
+amt:=charges1+price;
+END;
+
+--PL/SQL code to call Find_Bill Procedure
+set serveroutput on;
+set verify off;
+DECLARE
+gid1 varchar2(10);
+amt number(10);
+BEGIN
+gid1:='&Enter_Guest_ID';
+IF gid1 IS NULL THEN
+raise_application_error(-20000,'invaid Guest ID');
+END IF;
+Find_Bill(gid1,amt);
+DBMS_OUTPUT.PUT_LINE('Total Amount Payable for Guest'||gid1||' is - '||amt);
+END;
+
+--Trigger
+create or replace trigger t1
+before insert or update of salary on employee
+for each row
+begin
+if :new.salary<0 then
+raise_application_error(-20000,'invaid salary');
+end if;
+end;
+
+--self-join
+DECLARE
+CURSOR c_mgr IS select e1.Eid AS EMP_ID,e1.Ename AS EMP_NAME,e2.Eid AS MGR_ID,e2.Ename AS MGR_NAME from Employee e1,Employee e2 where e1.Mgr=e2.Eid;
+BEGIN
+for each in c_mgr
+LOOP
+DBMS_OUTPUT.PUT_LINE('The Manager of '||each.EMP_ID||' , '||each.EMP_NAME||' is '||each.MGR_ID||' , '||each.MGR_NAME);
+END LOOP;
+END;
+
